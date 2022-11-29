@@ -23,6 +23,6 @@
 	
 	<context:component-scan base-package="com.springbasic.ch4" />
 	
-	
+	<view-controller path="/" view-name="index"/>
 	
 </beans:beans>
