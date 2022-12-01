@@ -8,8 +8,9 @@ import java.sql.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.springbasic.ch4.sample.service.MybatisTestService;
 
 @Controller
 @RequestMapping("/ds")
@@ -17,6 +18,9 @@ public class DataSourceController {
 
 	@Autowired(required = true)
 	DriverManagerDataSource dataSource;
+	
+	@Autowired
+	MybatisTestService mybatisTestService;
 
 	// MySQL DB 연결 확인
 	@RequestMapping(value = "/testDataSource")
@@ -51,6 +55,12 @@ public class DataSourceController {
 			}
 		}
 
+		return "";
+	}
+	
+	@RequestMapping(value = "/testMybatis")
+	public String testMybatis() {
+		System.out.println("servertime: " + mybatisTestService.getServerTime());
 		return "";
 	}
 
