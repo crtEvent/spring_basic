@@ -29,5 +29,10 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardDto> getPage(int offset, int pageSize) throws Exception {
         return boardDao.selectPage(offset, pageSize);
     }
-
+	
+	@Override
+    public int getCount() throws Exception {
+        return boardDao.count();
+    }
+	
 }

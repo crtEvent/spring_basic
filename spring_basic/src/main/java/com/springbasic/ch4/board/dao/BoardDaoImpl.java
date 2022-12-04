@@ -34,4 +34,9 @@ public class BoardDaoImpl implements BoardDao {
         return session.selectList(namespace+"selectPage", map);
     }
 	
+	@Override
+	public int count() throws Exception {
+        return session.selectOne(namespace+"count");
+    }
+	
 }

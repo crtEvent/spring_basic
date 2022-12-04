@@ -37,5 +37,17 @@
 			</tr>
 		</c:forEach>
 	</table>
+	<br>
+	<div>
+		<c:if test="${pageHandler.showPrev}">
+			<a href="<c:url value="/board/list?page=${pageHandler.beginPage-1}&pageSize=${pageHandler.pageSize}"/>">[PREV]</a>
+		</c:if>
+		<c:forEach var="i" begin="${pageHandler.beginPage}" end="${pageHandler.endPage}">
+			<a href="<c:url value="/board/list?page=${i}&pageSize=${pageHandler.pageSize}"/>">${i}</a>
+		</c:forEach>
+		<c:if test="${pageHandler.showNext}">
+			<a href="<c:url value="/board/list?page=${pageHandler.endPage+1}&pageSize=${pageHandler.pageSize}"/>">[NEXT]</a>
+		</c:if>
+	</div>
 </body>
 </html>

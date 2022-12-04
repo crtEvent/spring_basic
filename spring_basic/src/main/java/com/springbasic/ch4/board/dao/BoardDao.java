@@ -9,5 +9,6 @@ public interface BoardDao {
 	public BoardDto select(int bno) throws Exception;
 	public List<BoardDto> selectAll() throws Exception;
 	public List<BoardDto> selectPage(int offset, int pageSize) throws Exception;
+	public int count() throws Exception;
 	
 }

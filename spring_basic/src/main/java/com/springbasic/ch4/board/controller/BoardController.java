@@ -25,10 +25,14 @@ public class BoardController {
 		if(pageSize == null) pageSize = 10;
 		
 		try {
+			int totalCnt = boardService.getCount();
+			PageHandler pageHandler = new PageHandler(totalCnt, page, pageSize);
+			
 			List<BoardDto> list = 
 			boardService.getPage((page-1)*pageSize, pageSize);
 			
 			model.addAttribute("list", list);
+			model.addAttribute("pageHandler", pageHandler);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -26,6 +26,12 @@ public class PageHandlerTest {
 		ph.print();
 		assertTrue(ph.getBeginPage() == 21);
 		assertTrue(ph.getEndPage() == 26);
-	}
+		
+		ph = new PageHandler(255, 10);
+		ph.print();
+		assertTrue(ph.getBeginPage() == 1);
+		assertTrue(ph.getEndPage() == 10);
 
+	}
+	
 }

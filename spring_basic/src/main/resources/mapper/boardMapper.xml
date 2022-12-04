@@ -45,4 +45,7 @@
         ]]>
     </select>
     
+    <select id="count" resultType="int">
+        SELECT count(*) FROM board
+    </select>
 </mapper>
