@@ -4,6 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<typeAliases>
+		<typeAlias type="com.springbasic.ch4.user.domain.User" alias="User"/>
 		<typeAlias type="com.springbasic.ch4.board.dto.BoardDto" alias="BoardDto"/>
 	</typeAliases>
 </configuration>

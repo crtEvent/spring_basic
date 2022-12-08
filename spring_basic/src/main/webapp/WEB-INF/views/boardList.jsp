@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<c:set var="loginId" value="${sessionScope.id == null ? '' : sessionScope.id}"/>
+<c:set var="loginOutLink" value="${loginId=='' ? '/login/login' : '/login/logout'}"/>
+<c:set var="loginOut" value="${loginId=='' ? 'Login' : 'ID='+=loginId}"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,9 +16,9 @@
 			<li id="logo">fastcampus</li>
 			<li><a href="<c:url value='/'/>">Home</a></li>
 			<li><a href="<c:url value='/board/list'/>">Board</a></li>
-			<li><a href="<c:url value='/login/login'/>">login</a></li>
+			<li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>
 			<li><a href="<c:url value='/register/add'/>">Sign in</a></li>
-			<li><a href=""><i class="fas fa-search small"></i></a></li>
+			<li><a href=""><i class="fa fa-search"></i></a></li>
 		</ul>
 	</div>
 	<table>
@@ -40,13 +42,17 @@
 	<br>
 	<div>
 		<c:if test="${pageHandler.showPrev}">
-			<a href="<c:url value="/board/list?page=${pageHandler.beginPage-1}&pageSize=${pageHandler.pageSize}"/>">[PREV]</a>
+			<a
+				href="<c:url value="/board/list?page=${pageHandler.beginPage-1}&pageSize=${pageHandler.pageSize}"/>">[PREV]</a>
 		</c:if>
-		<c:forEach var="i" begin="${pageHandler.beginPage}" end="${pageHandler.endPage}">
-			<a href="<c:url value="/board/list?page=${i}&pageSize=${pageHandler.pageSize}"/>">${i}</a>
+		<c:forEach var="i" begin="${pageHandler.beginPage}"
+			end="${pageHandler.endPage}">
+			<a
+				href="<c:url value="/board/list?page=${i}&pageSize=${pageHandler.pageSize}"/>">${i}</a>
 		</c:forEach>
 		<c:if test="${pageHandler.showNext}">
-			<a href="<c:url value="/board/list?page=${pageHandler.endPage+1}&pageSize=${pageHandler.pageSize}"/>">[NEXT]</a>
+			<a
+				href="<c:url value="/board/list?page=${pageHandler.endPage+1}&pageSize=${pageHandler.pageSize}"/>">[NEXT]</a>
 		</c:if>
 	</div>
 </body>
