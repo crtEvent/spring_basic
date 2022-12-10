@@ -10,4 +10,13 @@
 		]]>
 	</select>
 	
+	<insert id="insert" parameterType="User">
+		<![CDATA[
+		INSERT INTO user_info
+            (id, pwd, name, email, birth, sns, reg_date)
+        VALUES
+            (#{id}, #{pwd}, #{name}, #{email}, #{birth}, #{sns}, now())
+		]]>
+	</insert>
+	
 </mapper>

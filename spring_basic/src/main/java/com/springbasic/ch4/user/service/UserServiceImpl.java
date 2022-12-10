@@ -11,7 +11,13 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserDao userDao;
 	
+	@Override
 	public User getUser(String id) throws Exception {
 		return userDao.selectUser(id);
+	}
+	
+	@Override
+	public int registUser(User user) throws Exception {
+		return userDao.insertUser(user);
 	}
 }

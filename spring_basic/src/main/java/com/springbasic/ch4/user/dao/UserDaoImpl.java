@@ -17,6 +17,9 @@ public class UserDaoImpl implements UserDao {
 		return session.selectOne(namespace + "select", id);
 	}
 
-	
+	@Override
+    public int insertUser(User user) throws Exception {
+		return session.insert(namespace + "insert", user);
+	}
 	
 }
