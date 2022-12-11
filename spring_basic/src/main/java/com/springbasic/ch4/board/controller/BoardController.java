@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.springbasic.ch4.board.domain.PageHandler;
 import com.springbasic.ch4.board.dto.BoardDto;
@@ -39,4 +40,21 @@ public class BoardController {
 		
 		return "boardList";
 	}
+	
+	@GetMapping("/read")
+    public String read(Integer bno, Integer page, Integer pageSize, RedirectAttributes rattr, Model m) {
+        try {
+            BoardDto boardDto = boardService.read(bno);
+            m.addAttribute(boardDto);
+            m.addAttribute("page", page);
+            m.addAttribute("pageSize", pageSize);
+        } catch (Exception e) {
+            e.printStackTrace();
+            rattr.addAttribute("page", page);
+            rattr.addAttribute("pageSize", pageSize);
+            return "redirect:/board/list";
+        }
+
+        return "board";
+    }
 }
