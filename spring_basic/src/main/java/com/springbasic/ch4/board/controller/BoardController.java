@@ -87,4 +87,23 @@ public class BoardController {
             return "board";
         }
     }
+	
+	@PostMapping("/modify")
+    public String modify(BoardDto boardDto, RedirectAttributes rattr, Model m, HttpSession session) {
+        String writer = (String)session.getAttribute("id");
+        boardDto.setWriter(writer);
+
+        try {
+            if (boardService.modify(boardDto)!= 1)
+                throw new Exception("Modify failed.");
+
+            rattr.addFlashAttribute("msg", "MOD_OK");
+            return "redirect:/board/list";
+        } catch (Exception e) {
+            e.printStackTrace();
+            m.addAttribute(boardDto);
+            m.addAttribute("msg", "MOD_ERR");
+            return "board";
+        }
+    }
 }

@@ -57,4 +57,19 @@
             (#{title}, #{content}, #{writer})
         ]]>
     </insert>
+    
+    <update id="update" parameterType="BoardDto">
+    	<![CDATA[
+        UPDATE 
+        	board
+        SET   
+        	title = #{title}
+        	, content = #{content}
+        	, up_date = now()
+        WHERE 
+        	bno = #{bno}
+        AND 
+        	writer = #{writer}
+        ]]>
+    </update>
 </mapper>

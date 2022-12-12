@@ -44,4 +44,8 @@ public class BoardDaoImpl implements BoardDao {
         return session.insert(namespace+"insert", dto);
     }
 	
+	@Override
+    public int update(BoardDto dto) throws Exception {
+        return session.update(namespace+"update", dto);
+    }
 }

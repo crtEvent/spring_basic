@@ -11,5 +11,6 @@ public interface BoardService {
 	public List<BoardDto> getPage(int offset, int pageSize) throws Exception;
 	public int getCount() throws Exception;
 	public int write(BoardDto boardDto) throws Exception;
+	public int modify(BoardDto boardDto) throws Exception;
 	
 }
