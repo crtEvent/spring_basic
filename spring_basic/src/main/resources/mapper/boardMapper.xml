@@ -72,4 +72,11 @@
         	writer = #{writer}
         ]]>
     </update>
+    
+    <delete id="delete" parameterType="map">
+    	<![CDATA[
+        DELETE FROM board
+        WHERE bno = #{bno} and writer = #{writer}
+        ]]>
+    </delete>
 </mapper>

@@ -152,6 +152,14 @@
             if(formCheck())
               form.submit();
         });
+        
+        $("#removeBtn").on("click", function(){
+            if(!confirm("정말로 삭제하시겠습니까?")) return;
+            let form = $("#form");
+            form.attr("action", "<c:url value='/board/remove${searchCondition.queryString}'/>");
+            form.attr("method", "post");
+            form.submit();
+        });
     });
 </script>
 </body>

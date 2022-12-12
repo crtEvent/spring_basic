@@ -48,4 +48,12 @@ public class BoardDaoImpl implements BoardDao {
     public int update(BoardDto dto) throws Exception {
         return session.update(namespace+"update", dto);
     }
+	
+	@Override
+    public int delete(Integer bno, String writer) throws Exception {
+        Map map = new HashMap();
+        map.put("bno", bno);
+        map.put("writer", writer);
+        return session.delete(namespace+"delete", map);
+    }
 }

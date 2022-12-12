@@ -106,4 +106,21 @@ public class BoardController {
             return "board";
         }
     }
+	
+	@PostMapping("/remove")
+    public String remove(Integer bno, RedirectAttributes rattr, HttpSession session) {
+        String writer = (String)session.getAttribute("id");
+        String msg = "DEL_OK";
+
+        try {
+            if(boardService.remove(bno, writer)!=1)
+                throw new Exception("Delete failed.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "DEL_ERR";
+        }
+
+        rattr.addFlashAttribute("msg", msg);
+        return "redirect:/board/list";
+    }
 }

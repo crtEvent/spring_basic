@@ -12,5 +12,6 @@ public interface BoardDao {
 	public int count() throws Exception;
 	public int insert(BoardDto dto) throws Exception;
 	public int update(BoardDto dto) throws Exception;
+	public int delete(Integer bno, String writer) throws Exception;
 	
 }
