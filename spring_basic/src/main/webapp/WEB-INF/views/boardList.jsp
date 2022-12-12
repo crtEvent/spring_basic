@@ -184,36 +184,51 @@ td.title:hover {
 </style>
 </head>
 <body>
-	<div id="menu">
-		<ul>
-			<li id="logo">fastcampus</li>
-			<li><a href="<c:url value='/'/>">Home</a></li>
-			<li><a href="<c:url value='/board/list'/>">Board</a></li>
-			<li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>
-			<li><a href="<c:url value='/register/add'/>">Sign in</a></li>
-			<li><a href=""><i class="fa fa-search"></i></a></li>
-		</ul>
-	</div>
-	<table>
-		<tr>
-			<td>번호</td>
-			<td>제목</td>
-			<td>이름</td>
-			<td>등록일</td>
-			<td>조회수</td>
-		</tr>
-		<c:forEach var="board" items="${list}">
-			<tr>
-				<td>${board.bno}</td>
-				<td><a href="<c:url value="/board/read?bno=${board.bno}&page=${pageHandler.page}&pageSize=${pageHandler.pageSize}"/>">${board.title}</a></td>
-				<td>${board.writer}</td>
-				<td>${board.reg_date}</td>
-				<td>${board.view_cnt}</td>
-			</tr>
-		</c:forEach>
-	</table>
-	<br>
-	<div>
+<div id="menu">
+  <ul>
+    <li id="logo">fastcampus</li>
+    <li><a href="<c:url value='/'/>">Home</a></li>
+    <li><a href="<c:url value='/board/list'/>">Board</a></li>
+    <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>
+    <li><a href="<c:url value='/register/add'/>">Sign in</a></li>
+    <li><a href=""><i class="fa fa-search"></i></a></li>
+  </ul>
+</div>
+
+<div style="text-align:center">
+  <div class="board-container">
+    <div class="search-container">
+      <button id="writeBtn" class="btn-write" onclick="location.href='<c:url value="/board/write"/>'"><i class="fa fa-pencil"></i> 글쓰기</button>
+    </div>
+
+    <table>
+      <tr>
+        <th class="no">번호</th>
+        <th class="title">제목</th>
+        <th class="writer">이름</th>
+        <th class="regdate">등록일</th>
+        <th class="viewcnt">조회수</th>
+      </tr>
+      <c:forEach var="boardDto" items="${list}">
+        <tr>
+          <td class="no">${boardDto.bno}</td>
+          <td class="title"><a href="<c:url value="/board/read?bno=${boardDto.bno}&page=${pageHandler.page}&pageSize=${pageHandler.pageSize}"/>">${boardDto.title}</a></td>
+          <td class="writer">${boardDto.writer}</td>
+          <c:choose>
+            <c:when test="${boardDto.reg_date.time >= startOfToday}">
+              <td class="regdate"><fmt:formatDate value="${boardDto.reg_date}" pattern="HH:mm" type="time"/></td>
+            </c:when>
+            <c:otherwise>
+              <td class="regdate"><fmt:formatDate value="${boardDto.reg_date}" pattern="yyyy-MM-dd" type="date"/></td>
+            </c:otherwise>
+          </c:choose>
+          <td class="viewcnt">${boardDto.view_cnt}</td>
+        </tr>
+      </c:forEach>
+    </table>
+    <br>
+    <div class="paging-container">
+      <div class="paging">
 		<c:if test="${pageHandler.showPrev}">
 			<a
 				href="<c:url value="/board/list?page=${pageHandler.beginPage-1}&pageSize=${pageHandler.pageSize}"/>">[PREV]</a>
@@ -227,6 +242,9 @@ td.title:hover {
 			<a
 				href="<c:url value="/board/list?page=${pageHandler.endPage+1}&pageSize=${pageHandler.pageSize}"/>">[NEXT]</a>
 		</c:if>
-	</div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

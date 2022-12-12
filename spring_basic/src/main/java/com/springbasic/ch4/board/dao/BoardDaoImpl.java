@@ -39,4 +39,9 @@ public class BoardDaoImpl implements BoardDao {
         return session.selectOne(namespace+"count");
     }
 	
+	@Override
+	public int insert(BoardDto dto) throws Exception {
+        return session.insert(namespace+"insert", dto);
+    }
+	
 }

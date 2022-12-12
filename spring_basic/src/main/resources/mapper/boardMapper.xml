@@ -48,4 +48,13 @@
     <select id="count" resultType="int">
         SELECT count(*) FROM board
     </select>
+    
+    <insert id="insert" parameterType="BoardDto">
+    	<![CDATA[
+        INSERT INTO board
+            (title, content, writer)
+        VALUES
+            (#{title}, #{content}, #{writer})
+        ]]>
+    </insert>
 </mapper>

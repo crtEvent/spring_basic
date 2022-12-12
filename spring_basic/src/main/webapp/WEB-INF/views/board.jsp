@@ -128,30 +128,6 @@
             if(formCheck())
                 form.submit();
         });
-        $("#modifyBtn").on("click", function(){
-            let form = $("#form");
-            let readonly = $("input[name=title]", "#form").attr('readonly');
-            // 1. 읽기 상태이면, 수정 상태로 변경
-            if(readonly!=undefined) {
-                $(".writing-header").html("게시판 수정");
-                $("input[name=title]", "#form").attr('readonly', false);
-                $("textarea", "#form").attr('readonly', false);
-                $("#modifyBtn").html("<i class='fa fa-pencil'></i> 등록");
-                return;
-            }
-            // 2. 수정 상태이면, 수정된 내용을 서버로 전송
-            form.attr("action", "<c:url value='/board/modify'/>");
-            form.attr("method", "post");
-            if(formCheck())
-                form.submit();
-        });
-        $("#removeBtn").on("click", function(){
-            if(!confirm("정말로 삭제하시겠습니까?")) return;
-            let form = $("#form");
-            form.attr("action", "<c:url value='/board/remove?page=${page}&pageSize=${pageSize}'/>");
-            form.attr("method", "post");
-            form.submit();
-        });
         $("#listBtn").on("click", function(){
             location.href="<c:url value='/board/list?page=${page}&pageSize=${pageSize}'/>";
         });
