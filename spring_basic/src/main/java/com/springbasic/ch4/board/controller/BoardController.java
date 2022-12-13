@@ -1,7 +1,11 @@
 package com.springbasic.ch4.board.controller;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.springbasic.ch4.board.domain.PageHandler;
+import com.springbasic.ch4.board.domain.SearchCondition;
 import com.springbasic.ch4.board.dto.BoardDto;
 import com.springbasic.ch4.board.service.BoardService;
 
@@ -22,40 +27,48 @@ public class BoardController {
 	@Autowired
 	BoardService boardService;
 	
+	private boolean loginCheck(HttpServletRequest request) {
+        // 1. 세션을 얻어서(false는 session이 없어도 새로 생성하지 않는다. 반환값 null)
+        HttpSession session = request.getSession(false);
+        // 2. 세션에 id가 있는지 확인, 있으면 true를 반환
+        return session!=null && session.getAttribute("id")!=null;
+    }
+	
 	@GetMapping("/list")
-	public String list(Model model, Integer page, Integer pageSize) {
-		
-		if(page == null) page = 1;
-		if(pageSize == null) pageSize = 10;
-		
-		try {
-			int totalCnt = boardService.getCount();
-			PageHandler pageHandler = new PageHandler(totalCnt, page, pageSize);
-			
-			List<BoardDto> list = 
-			boardService.getPage((page-1)*pageSize, pageSize);
-			
-			model.addAttribute("list", list);
-			model.addAttribute("pageHandler", pageHandler);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return "boardList";
+	public String list(Model model, SearchCondition sc, HttpServletRequest request) {
+		if(!loginCheck(request))
+            return "redirect:/login/login?toURL="+request.getRequestURL();  // 로그인을 안했으면 로그인 화면으로 이동
+
+        try {
+            int totalCnt = boardService.getSearchResultCnt(sc);
+            model.addAttribute("totalCnt", totalCnt);
+
+            PageHandler pageHandler = new PageHandler(totalCnt, sc);
+
+            List<BoardDto> list = boardService.getSearchResultPage(sc);
+            model.addAttribute("list", list);
+            model.addAttribute("pageHandler", pageHandler);
+
+            Instant startOfToday = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant();
+            model.addAttribute("startOfToday", startOfToday.toEpochMilli());
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("msg", "LIST_ERR");
+            model.addAttribute("totalCnt", 0);
+        }
+
+        return "boardList"; // 로그인을 한 상태이면, 게시판 화면으로 이동
 	}
 	
 	@GetMapping("/read")
-    public String read(Integer bno, Integer page, Integer pageSize, RedirectAttributes rattr, Model m) {
+    public String read(Integer bno, SearchCondition sc, RedirectAttributes rattr, Model model) {
         try {
             BoardDto boardDto = boardService.read(bno);
-            m.addAttribute(boardDto);
-            m.addAttribute("page", page);
-            m.addAttribute("pageSize", pageSize);
+            model.addAttribute(boardDto);
         } catch (Exception e) {
             e.printStackTrace();
-            rattr.addAttribute("page", page);
-            rattr.addAttribute("pageSize", pageSize);
-            return "redirect:/board/list";
+            rattr.addFlashAttribute("msg", "READ_ERR");
+            return "redirect:/board/list"+sc.getQueryString();
         }
 
         return "board";
@@ -89,7 +102,7 @@ public class BoardController {
     }
 	
 	@PostMapping("/modify")
-    public String modify(BoardDto boardDto, RedirectAttributes rattr, Model m, HttpSession session) {
+    public String modify(BoardDto boardDto, SearchCondition sc, RedirectAttributes rattr, Model m, HttpSession session) {
         String writer = (String)session.getAttribute("id");
         boardDto.setWriter(writer);
 
@@ -98,7 +111,7 @@ public class BoardController {
                 throw new Exception("Modify failed.");
 
             rattr.addFlashAttribute("msg", "MOD_OK");
-            return "redirect:/board/list";
+            return "redirect:/board/list"+sc.getQueryString();
         } catch (Exception e) {
             e.printStackTrace();
             m.addAttribute(boardDto);

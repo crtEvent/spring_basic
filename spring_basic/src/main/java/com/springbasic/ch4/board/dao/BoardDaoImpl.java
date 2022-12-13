@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.springbasic.ch4.board.domain.SearchCondition;
 import com.springbasic.ch4.board.dto.BoardDto;
 
 @Repository
@@ -55,5 +56,17 @@ public class BoardDaoImpl implements BoardDao {
         map.put("bno", bno);
         map.put("writer", writer);
         return session.delete(namespace+"delete", map);
+    }
+	
+	@Override
+    public int searchResultCnt(SearchCondition sc) throws Exception {
+        System.out.println("sc in searchResultCnt() = " + sc);
+        System.out.println("session = " + session);
+        return session.selectOne(namespace+"searchResultCnt", sc);
+    }
+
+    @Override
+    public List<BoardDto> searchSelectPage(SearchCondition sc) throws Exception {
+        return session.selectList(namespace+"searchSelectPage", sc);
     }
 }

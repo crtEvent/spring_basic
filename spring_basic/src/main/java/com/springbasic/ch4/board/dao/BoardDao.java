@@ -3,6 +3,7 @@ package com.springbasic.ch4.board.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.springbasic.ch4.board.domain.SearchCondition;
 import com.springbasic.ch4.board.dto.BoardDto;
 
 public interface BoardDao {
@@ -13,5 +14,7 @@ public interface BoardDao {
 	public int insert(BoardDto dto) throws Exception;
 	public int update(BoardDto dto) throws Exception;
 	public int delete(Integer bno, String writer) throws Exception;
+	public int searchResultCnt(SearchCondition sc) throws Exception;
+	public List<BoardDto> searchSelectPage(SearchCondition sc) throws Exception;
 	
 }

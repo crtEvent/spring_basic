@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springbasic.ch4.board.dao.BoardDao;
+import com.springbasic.ch4.board.domain.SearchCondition;
 import com.springbasic.ch4.board.dto.BoardDto;
 
 @Service
@@ -48,5 +49,15 @@ public class BoardServiceImpl implements BoardService {
 	@Override
     public int remove(Integer bno, String writer) throws Exception {
         return boardDao.delete(bno, writer);
+    }
+	
+	@Override
+    public int getSearchResultCnt(SearchCondition sc) throws Exception {
+        return boardDao.searchResultCnt(sc);
+    }
+
+    @Override
+    public List<BoardDto> getSearchResultPage(SearchCondition sc) throws Exception {
+        return boardDao.searchSelectPage(sc);
     }
 }

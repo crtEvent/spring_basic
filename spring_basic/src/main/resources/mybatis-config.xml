@@ -6,5 +6,6 @@
 	<typeAliases>
 		<typeAlias type="com.springbasic.ch4.user.domain.User" alias="User"/>
 		<typeAlias type="com.springbasic.ch4.board.dto.BoardDto" alias="BoardDto"/>
+		<typeAlias type="com.springbasic.ch4.board.domain.SearchCondition" alias="SearchCondition"/>
 	</typeAliases>
 </configuration>

@@ -1,118 +1,141 @@
 package com.springbasic.ch4.board.domain;
 
+import org.springframework.web.util.UriComponentsBuilder;
+
 public class PageHandler {
-	private int totalCnt;  // ÃÑ °Ô½Ã¹° °¹¼ö
-	private int pageSize;  // ÇÑ ÆäÀÌÁöÀÇ °Ô½Ã¹° ¼ö
-	private int naviSize = 10;  // ÆäÀÌÁö ³»ºñ°ÔÀÌ¼ÇÀÇ Å©±â
-	private int totalPage; // ÀüÃ¼ ÆäÀÌÁö °¹¼ö
-	private int page;      // ÇöÀç ÆäÀÌÁö
-	private int beginPage; // ³»ºñ°ÔÀÌ¼ÇÀÇ Ã¹¹øÂ° ÆäÀÌÁö
-	private int endPage;   // ³»ºñ°ÔÀÌ¼ÇÀÇ ¸¶Áö¸· ÆäÀÌÁö
-	private boolean showPrev; // ÀÌÀü ÆäÀÌÁö·Î ÀÌµ¿ÇÏ´Â ¸µÅ© Ç¥½Ã ¿©ºÎ
-	private boolean showNext; // ´ÙÀ½ ÆäÀÌÁö·Î ÀÌµ¿ÇÏ´Â ¸µÅ© Ç¥½Ã ¿©ºÎ
-	
-	public PageHandler(int totalCnt, int page) {
-		this(totalCnt, page, 10);
-	}
-	
-	public PageHandler(int totalCnt, int page, int pageSize) {
-		this.totalCnt = totalCnt;
-		this.pageSize = pageSize;
-		this.page = page;
-		
-		totalPage = (int) Math.ceil(totalCnt / (double)pageSize);
-		beginPage = (((page-1) / naviSize) * naviSize) +1;
-		endPage = Math.min(beginPage + naviSize - 1, totalPage);
-		showPrev = beginPage != 1;
-		showNext = endPage != totalPage;
-	}
+    private SearchCondition sc;
+//  private int pageSize = 10; // í•œ íŽ˜ì´ì§€ë‹¹ ê²Œì‹œë¬¼ ê°¯ìˆ˜
+//  private int page; // í˜„ìž¬ íŽ˜ì´ì§€
+//  private String  option;
+//  private String  keyword;
+  public  final int NAV_SIZE = 10; // page navigation size
+  private int totalCnt; // ê²Œì‹œë¬¼ì˜ ì´ ê°¯ìˆ˜
+  private int totalPage; // ì „ì²´ íŽ˜ì´ì§€ì˜ ê°¯ìˆ˜
+  private int beginPage; // í™”ë©´ì— ë³´ì—¬ì¤„ ì²« íŽ˜ì´ì§€
+  private int endPage; // í™”ë©´ì— ë³´ì—¬ì¤„ ë§ˆì§€ë§‰ íŽ˜ì´ì§€
+  private boolean showNext = false; // ì´í›„ë¥¼ ë³´ì—¬ì¤„ì§€ì˜ ì—¬ë¶€. endPage==totalPageì´ë©´, showNextëŠ” false
+  private boolean showPrev = false; // ì´ì „ì„ ë³´ì—¬ì¤„ì§€ì˜ ì—¬ë¶€. beginPage==1ì´ ì•„ë‹ˆë©´ showPrevëŠ” false
 
-	public int getTotalCnt() {
-		return totalCnt;
-	}
+  public PageHandler(int totalCnt, Integer page) {
+      this(totalCnt, new SearchCondition(page, 10));
+  }
 
-	public void setTotalCnt(int totalCnt) {
-		this.totalCnt = totalCnt;
-	}
+  public PageHandler(int totalCnt, Integer page, Integer pageSize) {
+      this(totalCnt, new SearchCondition(page, pageSize));
+  }
 
-	public int getPageSize() {
-		return pageSize;
-	}
+  public PageHandler(int totalCnt, SearchCondition sc) {
+      this.totalCnt = totalCnt;
+      this.sc = sc;
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+      doPaging(totalCnt, sc);
+  }
 
-	public int getNaviSize() {
-		return naviSize;
-	}
+  private void doPaging(int totalCnt, SearchCondition sc) {
+      this.totalPage = totalCnt / sc.getPageSize() + (totalCnt % sc.getPageSize()==0? 0:1);
+      this.sc.setPage(Math.min(sc.getPage(), totalPage));  // pageê°€ totalPageë³´ë‹¤ í¬ì§€ ì•Šê²Œ
+      this.beginPage = (this.sc.getPage() -1) / NAV_SIZE * NAV_SIZE + 1; // 11 -> 11, 10 -> 1, 15->11. ë”°ë¡œ ë–¼ì–´ë‚´ì„œ í…ŒìŠ¤íŠ¸
+      this.endPage = Math.min(beginPage + NAV_SIZE - 1, totalPage);
+      this.showPrev = beginPage!=1;
+      this.showNext = endPage!=totalPage;
+  }
+  
+  public String getQueryString() {
+      return getQueryString(this.sc.getPage());
+  }
 
-	public void setNaviSize(int naviSize) {
-		this.naviSize = naviSize;
-	}
+  public String getQueryString(Integer page) {
+      // ?page=10&pageSize=10&option=A&keyword=title
+      return UriComponentsBuilder.newInstance()
+              .queryParam("page",     page)
+              .queryParam("pageSize", sc.getPageSize())
+              .queryParam("option",   sc.getOption())
+              .queryParam("keyword",  sc.getKeyword())
+              .build().toString();
+  }
+  
+  public void print() { 
+      System.out.println("page="+ sc.getPage());
+      System.out.print(showPrev? "PREV " : "");
 
-	public int getTotalPage() {
-		return totalPage;
-	}
+      for(int i=beginPage;i<=endPage;i++) {
+          System.out.print(i+" ");
+      }
+      System.out.println(showNext? " NEXT" : "");
+  }
 
-	public void setTotalPage(int totalPage) {
-		this.totalPage = totalPage;
-	}
+  public SearchCondition getSc() {
+      return sc;
+  }
 
-	public int getPage() {
-		return page;
-	}
+  public void setSc(SearchCondition sc) {
+      this.sc = sc;
+  }
 
-	public void setPage(int page) {
-		this.page = page;
-	}
+  public int getTotalCnt() {
+      return totalCnt;
+  }
 
-	public int getBeginPage() {
-		return beginPage;
-	}
+  public void setTotalCnt(int totalCnt) {
+      this.totalCnt = totalCnt;
+  }
 
-	public void setBeginPage(int beginPage) {
-		this.beginPage = beginPage;
-	}
+  public boolean isShowNext() {
+      return showNext;
+  }
 
-	public int getEndPage() {
-		return endPage;
-	}
+  public void setShowNext(boolean showNext) {
+      this.showNext = showNext;
+  }
 
-	public void setEndPage(int endPage) {
-		this.endPage = endPage;
-	}
+  public int getBeginPage() {
+      return beginPage;
+  }
 
-	public boolean isShowPrev() {
-		return showPrev;
-	}
+  public void setBeginPage(int beginPage) {
+      this.beginPage = beginPage;
+  }
 
-	public void setShowPrev(boolean showPrev) {
-		this.showPrev = showPrev;
-	}
+  public int getNAV_SIZE() {
+      return NAV_SIZE;
+  }
 
-	public boolean isShowNext() {
-		return showNext;
-	}
+  public int getTotalPage() {
+      return totalPage;
+  }
 
-	public void setShowNext(boolean showNext) {
-		this.showNext = showNext;
-	}
-	
-	public void print() {
-		System.out.println("page = "+page);
-		System.out.print(showPrev ? "[PREV] " : "");
-		for(int i = beginPage; i <= endPage; i++) {
-			System.out.print(i+" ");
-		}
-		System.out.print(showNext ? "[NEXT]\n" : "\n");
-	}
+  public void setTotalPage(int totalPage) {
+      this.totalPage = totalPage;
+  }
 
-	@Override
-	public String toString() {
-		return "PageHandler [totalCnt=" + totalCnt + ", pageSize=" + pageSize + ", naviSize=" + naviSize
-				+ ", totalPage=" + totalPage + ", page=" + page + ", beginPage=" + beginPage + ", endPage=" + endPage
-				+ ", showPrev=" + showPrev + ", showNext=" + showNext + "]";
-	}
-	
+  public int getEndPage() {
+      return endPage;
+  }
+
+  public void setEndPage(int endPage) {
+      this.endPage = endPage;
+  }
+
+  public boolean isShowPrev() {
+      return showPrev;
+  }
+
+  public void setShowPrev(boolean showPrev) {
+      this.showPrev = showPrev;
+  }
+
+  @Override
+  public String toString() {
+      return "PageHandler{" +
+              "sc=" + sc +
+              ", totalCnt=" + totalCnt +
+              ", showNext=" + showNext +
+              ", beginPage=" + beginPage +
+              ", NAV_SIZE=" + NAV_SIZE +
+              ", totalPage=" + totalPage +
+              ", endPage=" + endPage +
+              ", showPrev=" + showPrev +
+              '}';
+  }
+  
 }
